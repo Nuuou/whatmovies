@@ -46,7 +46,7 @@ export default {
     },
     methods: {
         searchMovies: function() {
-            axios.get('http://omdbapi.com', {
+            axios.get('https://omdbapi.com', {
                 params: {
                     s: this.movie_search,
                     type: 'movie',
@@ -73,7 +73,7 @@ export default {
 
         },
         showInfo: function(id) {
-            axios.get('http://omdbapi.com', {
+            axios.get('https://omdbapi.com', {
                 params: {
                     i: id,
                     apikey: '4893e7fc'
