@@ -41,7 +41,7 @@ export default {
         ListTeaser
     },
     created: function() {
-        console.log(this.$firebaseRefs.lists);
+        //console.log(this.$firebaseRefs.lists);
     },
     methods: {
         addList: function() {
