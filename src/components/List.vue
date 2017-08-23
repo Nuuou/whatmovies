@@ -6,17 +6,16 @@
         <input id="movie-search" :class="[{error: movie_search_error}]" type="text" v-model="movie_search" @keyup.enter="searchMovies">
         <div class="movie-results-container">
             <ul class="movie-results">
-                <li v-for="movie_result in movie_results" v-bind:data-imdb-id="movie_result.imdbID" v-on:click="showInfo(movie_result.imdbID)">
-                    <img v-if="movie_result.Poster" :src="movie_result.Poster">
-                    <span class="movie-title" v-if="movie_result.Title"><strong>{{ movie_result.Title }}</strong><span class="movie-year" v-if="movie_result.Year"> ({{ movie_result.Year }})</span></span>
+                <li v-for="movie_result in movie_results" v-bind:data-id="movie_result.id">
+                    <img :src="'https://image.tmdb.org/t/p/w185' + movie_result.poster_path" v-if="movie_result.poster_path">
+                    <div class="movie-info">
+                        <div class="movie-title" v-if="movie_result.title"><strong>{{ movie_result.title }}</strong></div>
+                        <ul class="movie-genres" v-if="movie_result.genre_ids">
+                            <li v-for="movie_genre in movie_result.genre_ids" v-bind:data-genre-id="movie_genre">{{ getGenre(movie_genre) }}</li>
+                        </ul>
+                    </div>
                 </li>
             </ul>
-            <div class="movie-info">
-                <span class="movie-title" v-if="movie_info.Title"><a :href="'http://imdb.com/title/' + movie_info.imdbID" target="_blank"><strong>{{ movie_info.Title }}</strong></a><span class="movie-year" v-if="movie_info.Year"> ({{ movie_info.Year }})</span></span>
-                <br>
-                <span class="movie-director" v-if="movie_info.Director">Director: {{ movie_info.Director }}</span>
-                <br>
-            </div>
         </div>
     </section>
 </template>
@@ -41,16 +40,51 @@ export default {
             movie_search_error: false,
             movie_search: '',
             movie_results: [],
-            movie_info: {}
+            movie_info: {},
+            movie_genres: []
         }
     },
+    created: function() {
+        this.$jsonp('https://api.themoviedb.org/3/genre/movie/list', {
+            language: 'en-US',
+            api_key: 'a8d0b489a47ea579975f71e33fdf1503',
+            callbackQuery: 'callback',
+            callbackName: 'receive'
+        })
+        .then(data => {
+            this.movie_genres = data.genres;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    },
     methods: {
+        getGenre: function(id) {
+            return this.movie_genres.filter(genre => genre.id == id)[0].name;
+        },
         searchMovies: function() {
-            axios.get('https://omdbapi.com', {
+            this.$jsonp('https://api.themoviedb.org/3/search/movie', {
+                query: this.movie_search,
+                include_adult: false,
+                language: 'en-US',
+                api_key: 'a8d0b489a47ea579975f71e33fdf1503',
+                callbackQuery: 'callback',
+                callbackName: 'receive'
+            })
+            .then(data => {
+                this.movie_results = data.results;
+                console.log(data.results);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+            /*
+            axios.get('https://api.themoviedb.org/3/search/movie', {
                 params: {
-                    s: this.movie_search,
-                    type: 'movie',
-                    apikey: '4893e7fc'
+                    query: this.movie_search,
+                    include_adult: false,
+                    language: 'en-US',
+                    api_key: 'a8d0b489a47ea579975f71e33fdf1503'
                 }
             })
             .then((response) => {
@@ -70,6 +104,7 @@ export default {
                 this.movie_results = [];
                 this.movie_info = {};
             });
+            */
 
         },
         showInfo: function(id) {
@@ -113,7 +148,7 @@ input {
         height: auto;
     }
 
-    li {
+    > li {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
