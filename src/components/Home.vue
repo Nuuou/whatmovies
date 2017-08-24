@@ -60,21 +60,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-    .lists {
-        padding-left: 0;
-        list-style: none;
-    }
-    .lists li {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        padding: 20px 0;
-        box-shadow: 0 -1px 0 0 #ccc inset;
-    }
-    .lists li:last-of-type {
-        box-shadow: none;
-    }
-</style>

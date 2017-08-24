@@ -2,21 +2,33 @@
     <section class="main-content main-content--list">
         <router-link :to="{ name: 'Home' }">Go back back back...</router-link>
         <h1><strong>{{ list_data.name }}</strong></h1>
-        <label for="movie-search">Search Movies</label>
-        <input id="movie-search" :class="[{error: movie_search_error}]" type="text" v-model="movie_search" @keyup.enter="searchMovies">
-        <div class="movie-results-container">
-            <ul class="movie-results">
-                <li v-for="movie_result in movie_results" v-bind:data-id="movie_result.id">
-                    <img :src="'https://image.tmdb.org/t/p/w185' + movie_result.poster_path" v-if="movie_result.poster_path">
-                    <div class="movie-info">
-                        <div class="movie-title" v-if="movie_result.title"><strong>{{ movie_result.title }}</strong></div>
-                        <ul class="movie-genres" v-if="movie_result.genre_ids">
-                            <li v-for="movie_genre in movie_result.genre_ids" v-bind:data-genre-id="movie_genre">{{ getGenre(movie_genre) }}</li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </div>
+        <v-layout row>
+            <v-flex>
+                <v-text-field id="movie-search" :class="[{error: movie_search_error}]" type="text" v-model="movie_search" @keyup.enter="searchMovies" label="Movie Search"></v-text-field>
+            </v-flex>
+        </v-layout>
+
+        <v-layout row v-if="movie_results.length">
+            <v-flex xs12 sm6 offset-sm3>
+                <v-card>
+                    <v-list two-line class="movie-results">
+                        <template v-for="movie_result in movie_results" v-bind:data-id="movie_result.id">
+                            <v-list-tile avatar>
+                                <v-list-tile-avatar v-if="movie_result.poster_path">
+                                    <img :src="'https://image.tmdb.org/t/p/w185' + movie_result.poster_path"></v-list-tile-avatar>
+                                </v-list-tile-avatar>
+                                <v-list-tile-content>
+                                    <v-list-tile-title v-if="movie_result.title">{{ movie_result.title }}</v-list-tile-title>
+                                    <v-list-tile-sub-title v-if="movie_result.genre_ids">
+                                        <span v-for="movie_genre in movie_result.genre_ids">{{ getGenre(movie_genre) }}, </span>
+                                    </v-list-tile-sub-title>
+                                </v-list-tile-content>
+                            </v-list-tile>
+                        </template>
+                    </v-list>
+                </v-card>
+            </v-flex>
+        </v-layout>
     </section>
 </template>
 
@@ -125,44 +137,8 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
-input {
-    &.error {
-        border: 1px solid tomato;
-    }
-}
-
-.movie-results-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-}
-.movie-results {
-    padding-left: 0;
-    width: 50%;
-    list-style: none;
-
-    img {
-        margin-right: 20px;
-        width: 150px;
-        height: auto;
-    }
-
-    > li {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: flex-start;
-        align-items: flex-start;
-        padding: 20px 0;
-        box-shadow: 0 -1px 0 0 #ccc inset;
-
-        &:last-of-type {
-            box-shadow: none;
-        }
-    }
-}
-.movie-info {
-    width: 50%;
+<style>
+.input-group__details:before {
+    background: #424242;
 }
 </style>
