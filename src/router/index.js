@@ -5,18 +5,30 @@ import List from '@/components/List'
 
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
     mode: 'history',
     routes: [
         {
             path: '/',
             name: 'Home',
-            component: Home
+            component: Home,
+            meta: {
+                title: 'whatmovies | home'
+            }
         },
         {
             path: '/list/:list_id',
             name: 'List',
-            component: List
+            component: List,
+            meta: {
+                title: 'whatmovies | list'
+            }
         }
     ]
-})
+});
+
+router.afterEach(route => {
+    document.title = route.meta.title;
+});
+
+export default router;

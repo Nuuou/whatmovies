@@ -15,7 +15,7 @@
                 </v-list-tile>
             </v-list>
         </v-navigation-drawer>
-        <v-toolbar class="cyan" dark>
+        <v-toolbar class="orange" dark>
             <v-toolbar-title>whatmovies</v-toolbar-title>
         </v-toolbar>
         <main>
