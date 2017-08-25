@@ -1,7 +1,11 @@
 <template>
     <section class="main-content main-content--home">
-        <h1>{{ title }}</h1>
-        <input type="text" v-model="newList" @keyup.enter="addList">
+        <h4>{{ title }}</h4>
+        <v-layout row>
+            <v-flex>
+                <v-text-field id="movie-search" v-model="newList" @keyup.enter="addList" label="Add List"></v-text-field>
+            </v-flex>
+        </v-layout>
         <ul class="lists">
             <li v-for="(list, key) in lists" v-if="key != '.key'">
                 <router-link :to="{ name: 'List', params: { list_id: key } }">
@@ -60,3 +64,8 @@ export default {
     }
 }
 </script>
+<style>
+.input-group__details:before {
+    background: #424242;
+}
+</style>
